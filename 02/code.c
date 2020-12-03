@@ -63,5 +63,7 @@ int main(void)
    }
 
    printf("Parsed: %d lines, Found: %d valid ones.\n", no_parsed, no_valid);
+
+   fclose(fp);
    return 0;
 }
