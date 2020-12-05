@@ -1,69 +1,58 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define LINE_LENGTH 12
+#define NOF_BOARDING_PASS 869
+
+int cmpfunc (const void * a, const void * b)
+{
+   if(*(unsigned int *)a < *(unsigned int*)b)
+   {
+      return -1;
+   }
+   else if(*(unsigned int *)a > *(unsigned int*)b)
+   {
+      return 1;
+   }
+   return 0;
+}
 
 int main(void)
 {
    FILE *fp = fopen("data.txt", "r");
-   int nof_boarding_pass = 0, max_id = 0, min_id = 1024;
+   int nof_boarding_pass = 0;
    char line[LINE_LENGTH];
-   int start,stop;
-   int row,col;
+   unsigned int id_arr[NOF_BOARDING_PASS];
+   memset(id_arr, 0, NOF_BOARDING_PASS*sizeof(unsigned int));
 
-   int id_arr[1024];
-   memset(id_arr, 0, 1024*sizeof(int));
-
-   while(fgets(line, 12, fp) != NULL)
+   while(fgets(line, LINE_LENGTH, fp) != NULL)
    {
+      // Do not include trailing newline in the loop
+      for(int i = 0; i < LINE_LENGTH-2; i++)
+      {
+         if(line[i] == 'B' || line[i] == 'R')
+         {
+            // OR add ones at the appropriate positions
+            id_arr[nof_boarding_pass] |= 1<<(LINE_LENGTH-3-i);
+         }
+      }
       nof_boarding_pass++;
-
-      start = 0; stop = 127;
-      for(int i = 0; i < 7; i++)
-      {
-         if(line[i] == 'F')
-         {
-            stop = (stop-start-1)/2 + start;
-         }
-         else if(line[i] == 'B')
-         {
-            start = (stop-start+1)/2 + start;
-         }
-      }
-      row = start;
-
-      start = 0; stop = 7;
-      for(int i = 7; i < 10; i++)
-      {
-         if(line[i] == 'L')
-         {
-            stop = (stop-start-1)/2 + start;
-         }
-         else if(line[i] == 'R')
-         {
-            start = (stop-start+1)/2 + start;
-         }
-      }
-      col = start;
-
-      if(row*8+col > max_id)
-      {
-         max_id = row*8+col;
-      }
-      if(row*8+col < min_id)
-      {
-         min_id = row*8+col;
-      }
-      id_arr[row*8+col] = 1;
    }
 
-   printf("Tested %d boarding passes, max id %d\n", nof_boarding_pass, max_id);
+   // Sort ascending order
+   qsort(id_arr, nof_boarding_pass, sizeof(unsigned int), cmpfunc);
 
-   for(int i = min_id; i < max_id; i++)
+   // Find the missing ID
+   int j;
+   for(j = 0; j<nof_boarding_pass-1; j++)
    {
-      if(id_arr[i] == 0)
+      if(id_arr[j+1]-id_arr[j] != 1)
       {
-         printf("My seat ID is: %d\n", i);
+         break;
       }
    }
+
+   // Max value at last postion, missing value is after loop exit idx
+   printf("The largest id: %u and the missing_no: %d\n", id_arr[nof_boarding_pass-1], id_arr[j]+1);
 }
