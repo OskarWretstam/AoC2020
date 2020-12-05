@@ -54,7 +54,7 @@ valid_t check_key_val(FILE* fp, char start_char)
       // This ignored, to speed up :)
       return INVALID;
    }
-   if(strcmp(key_buffer, "byr") == 0)
+   else if(strcmp(key_buffer, "byr") == 0)
    {
       if(atoi(val_buffer) >= 1920 && atoi(val_buffer) <= 2002)
       {

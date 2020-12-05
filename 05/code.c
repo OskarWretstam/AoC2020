@@ -39,6 +39,7 @@ int main(void)
       }
       nof_boarding_pass++;
    }
+   fclose(fp);
 
    // Sort ascending order
    qsort(id_arr, nof_boarding_pass, sizeof(unsigned int), cmpfunc);
