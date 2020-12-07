@@ -1,0 +1,9 @@
+light red bags:1 bright white bag,2 muted yellow bags
+dark orange bags:3 bright white bags,4 muted yellow bags
+bright white bags:1 shiny gold bag
+muted yellow bags:2 shiny gold bags,9 faded blue bags
+shiny gold bags:1 dark olive bag,2 vibrant plum bags
+dark olive bags:3 faded blue bags,4 dotted black bags
+vibrant plum bags:5 faded blue bags,6 dotted black bags
+faded blue bags:no other bags
+dotted black bags:no other bags
