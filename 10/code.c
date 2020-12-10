@@ -19,7 +19,7 @@ int cmpfunc (const void * a, const void * b)
    return 0;
 }
 
-long long unsigned ipow(int base, int exp)
+int ipow(int base, int exp)
 {
     long long unsigned result = 1;
     for (;;)
@@ -57,29 +57,17 @@ int main(void)
 
    // Just count one and three steps
    int nof_1_jolt = 0, nof_3_jolt = 0;
+
+   // Here is the fun stuff, count blocks of consecutive one steps
+   int one_block_hash[MAX_ONE_BLOCK_LEN];
+   memset(one_block_hash, 0, MAX_ONE_BLOCK_LEN*sizeof(int));
+   int consec_one_steps = 0;
+
    for(int i = 0; i < NOF_JOLTAGES_CONVERTERS-1; i++)
    {
       if(converters[i+1]-converters[i] == 1)
       {
          nof_1_jolt++;
-      }
-      else if(converters[i+1]-converters[i] == 3)
-      {
-         nof_3_jolt++;
-      }
-   }
-
-   printf("1-jolt: %d, 3-jolt: %d, multiplied: %d\n", nof_1_jolt, nof_3_jolt, nof_1_jolt*nof_3_jolt);
-
-   int one_block_hash[MAX_ONE_BLOCK_LEN];
-   memset(one_block_hash, 0, MAX_ONE_BLOCK_LEN*sizeof(int));
-   int consec_one_steps = 0;
-
-   // Here is the fun stuff, count blocks of consecutive one steps
-   for(int i = 0; i < NOF_JOLTAGES_CONVERTERS-1; i++)
-   {
-      if(converters[i+1] - converters[i] == 1)
-      {
          consec_one_steps++;
       }
       else if(consec_one_steps > 0)
@@ -87,7 +75,15 @@ int main(void)
          one_block_hash[consec_one_steps]++;
          consec_one_steps = 0;
       }
+
+      if(converters[i+1]-converters[i] == 3)
+      {
+         nof_3_jolt++;
+      }
    }
+
+   printf("Task 1: 1-jolt: %d, 3-jolt: %d, multiplied: %d\n", nof_1_jolt, nof_3_jolt, nof_1_jolt*nof_3_jolt);
+
    // one_block_hash[1] = nof blocks with two consecutive ones
    // one_block_hash[2] = nof blocks with three consecutive ones
 
